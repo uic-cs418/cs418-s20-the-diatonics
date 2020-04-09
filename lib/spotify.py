@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 import spotipy
 import spotipy.oauth2 as oauth2
 
@@ -45,7 +46,7 @@ def get_audio_features(urls, sp):
     '''
     audio_features_dict = sp.audio_features(tracks=urls)
     df = pd.DataFrame.from_dict(audio_features_dict)
-    df = df.drop(columns=['time_signature', 'duration_ms', 'mode', 'type', 'id', 'uri','track_href','analysis_url'])
+    df = df.drop(columns=['time_signature', 'mode', 'type', 'id', 'uri','track_href','analysis_url'])
     return df
 
 def audio_features(urls, sp):

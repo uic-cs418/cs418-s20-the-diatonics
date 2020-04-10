@@ -3,14 +3,13 @@ import pandas as pd
 import spotipy
 import spotipy.oauth2 as oauth2
 
-#def get_spotify_client():
-#    '''
-#    Returns an instantiated Spotify API client, using the client id and secret provided in the files ClientID.txt and #ClientSecret.txt
-#    '''
-
-def read_api_key(filepath):
-    with open(filepath, 'r') as f:
-        return f.read().replace('\n','')
+def get_spotify_client():
+    '''
+    Returns an instantiated Spotify API client, using the client id and secret provided in the files ClientID.txt and ClientSecret.txt
+    '''
+    def read_api_key(filepath):
+        with open(filepath, 'r') as f:
+            return f.read().replace('\n','')
 
 clientID = read_api_key('ClientID.txt')
 clientSecret = read_api_key('ClientSecret.txt')

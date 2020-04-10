@@ -20,7 +20,3 @@ def error(column, dataframe):
             sum += pow(dataframe[dataframe[column] == j].iloc[:,i] - dataframe[dataframe[column] == j].mean()[i], 2).sum()
         total += sum
     return total
-
-
-error('cluster')
-error('baseline')

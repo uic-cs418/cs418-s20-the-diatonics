@@ -12,7 +12,7 @@ while(True):
         dataframe.loc[j:len(urls),:].baseline = i
         break
         
-def error(column):
+def error(column, dataframe):
     total = 0
     for j in range(0,50):
         sum = 0

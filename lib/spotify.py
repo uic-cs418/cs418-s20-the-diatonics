@@ -11,12 +11,12 @@ def get_spotify_client():
         with open(filepath, 'r') as f:
             return f.read().replace('\n','')
 
-clientID = read_api_key('ClientID.txt')
-clientSecret = read_api_key('ClientSecret.txt')
-username = read_api_key('username.txt')
-credentials = spotipy.oauth2.SpotifyClientCredentials(client_id = clientID, client_secret = clientSecret)
+    clientID = read_api_key('ClientID.txt')
+    clientSecret = read_api_key('ClientSecret.txt')
+    username = read_api_key('username.txt')
+    credentials = spotipy.oauth2.SpotifyClientCredentials(client_id = clientID, client_secret = clientSecret)
 
-return spotipy.Spotify(client_credentials_manager = credentials)
+    return spotipy.Spotify(client_credentials_manager = credentials)
 
 def get_spotify_resource_url(title_artist, sp):
     '''

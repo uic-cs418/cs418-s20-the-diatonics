@@ -15,10 +15,6 @@ def get_title_artist(chart):
         talist.append(title_artist)
     return talist
 
-def read_api_key(filepath):
-    with open(filepath, 'r') as f:
-        return f.read().replace('\n','')
-
 def get_url(title_artist):
     sp = spotipy.Spotify(client_credentials_manager = credentials)
     url_list = []
@@ -29,9 +25,36 @@ def get_url(title_artist):
             print(song)
     return url_list
 
-def get_audio_features(urls):
+def get_audio_features(urls, sp):
+    '''
+    Retrieves the Spotify audio features for a collection of urls.
+    Input: List of Spotify song urls
+    Output: Dataframe containing the audio features for each track
+    '''
     audio_features_dict = sp.audio_features(tracks=urls)
     df = pd.DataFrame.from_dict(audio_features_dict)
-    df = df.drop(columns=['type', 'id', 'uri','track_href','analysis_url'])
+    df = df.drop(columns=['time_signature', 'mode', 'type', 'id', 'uri','track_href','analysis_url'])
     return df
+
+def audio_features(urls, sp):
+    '''
+    A wrapper for `get_audio_features()`, which gets the audio features of 100 songs 
+    at a time, and then returns the combined results.
+    Input: List of Spotify song urls
+    Output: Dataframe containing the audio features for each track
+    '''
+    j=0
+    dataframe = pd.DataFrame()
+    while(True):
+        if j+100 < len(urls):
+            df = get_audio_features(urls[j:j+100], sp)
+            dataframe = dataframe.append(df)
+            j = j+100
+        else:
+            df = get_audio_features(urls[j:len(urls)], sp)
+            dataframe = dataframe.append(df)
+            break
+    dataframe.reset_index(inplace = True)
+    dataframe.drop(columns=['index'], inplace=True)
+    return dataframe
 

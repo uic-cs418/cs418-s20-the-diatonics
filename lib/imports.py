@@ -7,6 +7,3 @@ from matplotlib import pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
-
-import sys
-sys.path.insert(1, './lib/')

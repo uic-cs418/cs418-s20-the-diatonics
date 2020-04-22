@@ -1,22 +1,25 @@
-dataframe['baseline'] = 0
+from sklearn.cluster import KMeans
 
-i = 0
-j = 0
+def scale_columns(cols, df, scaler):
+    '''
+    Replaces the data in the given columns with its scaled equivalent
+    '''
+    for col in cols:
+        scaler.fit(df[[col]])
+        df[[col]] = scaler.transform(df[[col]])
 
-while(True):
-    if j+42 < len(urls):
-        dataframe.loc[j:j+42,:].baseline = i
-        j = j+43
-        i = i+1
-    else:
-        dataframe.loc[j:len(urls),:].baseline = i
-        break
-        
-def error(column, dataframe):
-    total = 0
-    for j in range(0,50):
-        sum = 0
-        for i in range(0,10):
-            sum += pow(dataframe[dataframe[column] == j].iloc[:,i] - dataframe[dataframe[column] == j].mean()[i], 2).sum()
-        total += sum
-    return total
+def recommend(song, dataframe):
+    try:
+        clt = dataframe[dataframe.title == song].cluster.values[0]
+        df = dataframe[dataframe.cluster == clt][['title', 'artist']].reset_index().drop(columns=['index'])
+        return df
+    except:
+        print('The requested song is not in dataframe.')
+
+
+def cluster_songs(df, num_clusters = 50):
+    # k-means clustering algorithm with 50 clusters
+    km = KMeans(n_clusters=num_clusters)
+    return km.fit_predict(
+        df[['danceability', 'energy', 'key', 'loudness', 'speechiness',
+            'acousticness','instrumentalness', 'liveness', 'valence', 'tempo']])

@@ -34,7 +34,7 @@ def get_spotify_resource_urls(title_artist, sp):
                     track_name,
                     artist_name,
                     sp.search(
-                        q=track_name, type='track', limit=1
+                        q=track_name + ' ' + artist_name, type='track', limit=1
                     )['tracks']['items'][0]['external_urls']['spotify']
                 )
             )

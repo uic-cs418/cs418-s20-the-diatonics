@@ -1,5 +1,7 @@
 import pandas as pd
-#below are some functions from Mahdi's branch from the original project idea
+
+def load_song_data():
+    return pd.read_csv("data/classic-rock-song-list.csv")
 
 def clean(name):
     cl_str = ''
@@ -9,12 +11,17 @@ def clean(name):
     return cl_str
 
 # returns a list of strings containing song titles and artists to be queried
-def get_title_artist(chart):
-    talist = []
-    for i in range(0,100):
-        title_artist = clean(chart[i].title)+' '+clean(chart[i].artist)
-        talist.append(title_artist)
-    return talist
+def get_title_artist(song_data):
+    # extracting title and names of the artists/bands
+    titles = song_data['Song Clean'].tolist()
+    artists = song_data['ARTIST CLEAN'].tolist()
+
+    # creating a list of titles+aritsts to be queried
+    ta_list = []
+    for i in range(0, len(titles)):
+        ta_list.append(titles[i] + " " + artists[i])
+
+    return ta_list
 
 def get_url(title_artist):
     sp = spotipy.Spotify(client_credentials_manager = credentials)

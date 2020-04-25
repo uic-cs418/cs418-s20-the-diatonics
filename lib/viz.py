@@ -1,4 +1,5 @@
 import seaborn as sns
+from matplotlib import pyplot as plt
 
 def spotify_property_dist_graph(data):
     plot = sns.boxplot(
@@ -22,3 +23,16 @@ def get_release_year_distribution_graph(raw_song_data):
         data=eda_data,
         x='Release Year'
     )
+    
+def compare_centers(centersDF):
+    centersDF = centersDF.sort_values(by=['liveness'])
+    toPlot = centersDF.copy()
+    artistSeries = centersDF.artist
+    songSeries = centersDF.title
+    toPlot = toPlot.drop(columns=['title','artist','cluster'])
+    fig = plt.figure()
+    fig.set_size_inches(90,50)
+    for i, row in enumerate(centersDF.iterrows()):
+        ax = plt.subplot(10,5,i+1)
+        ax.set_title(artistSeries.iloc[i] + " - " + songSeries.iloc[i] )
+        ax.bar(toPlot.columns.values,toPlot.iloc[i])

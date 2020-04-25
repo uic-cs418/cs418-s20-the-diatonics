@@ -2,7 +2,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
 import spotify
 from sklearn.preprocessing import MinMaxScaler
-
+from sklearn.metrics import silhouette_score
 
 def scale_columns(cols, df, scaler):
     '''
@@ -47,3 +47,17 @@ def cluster_songs(df, num_clusters = 50):
     center = df.iloc[closest,:]
     return (df, center)
 
+def sil_elb(dataframe):
+    sse = []
+    sc = []
+    for n_clusters in range(50,1500,50):
+        km = KMeans(n_clusters=n_clusters)
+        preds = km.fit_predict(dataframe[['danceability', 'energy', 'key', 'loudness', 'speechiness', 'acousticness', 
+                                      'instrumentalness', 'liveness', 'valence', 'tempo']])
+        centers = km.cluster_centers_
+
+        score = silhouette_score(dataframe[['danceability', 'energy', 'key', 'loudness', 'speechiness', 'acousticness', 
+                                      'instrumentalness', 'liveness', 'valence', 'tempo']], preds)
+        sc.append(score)
+        sse.append(km.inertia_)
+    return (sse,sc)

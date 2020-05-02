@@ -1,4 +1,5 @@
 from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import pairwise_distances_argmin_min
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import silhouette_score
@@ -43,7 +44,15 @@ def cluster_songs(df, num_clusters = 50):
     km = KMeans(n_clusters=num_clusters)
     prediction = km.fit_predict(df[['danceability', 'energy', 'key', 'loudness', 'speechiness',
             'acousticness','instrumentalness', 'liveness', 'valence', 'tempo']])
-    df['cluster'] = prediction
+    df['cluster_km'] = prediction
+    
+    # agglomerative clustering algorithm with 50 clusters
+    agg = AgglomerativeClustering(n_clusters=50)
+    clustering = agg.fit(df[['danceability', 'energy', 'key', 'loudness', 'speechiness', 'acousticness', 
+                                      'instrumentalness', 'liveness', 'valence', 'tempo']])
+    df['cluster_ag'] = clustering.labels_
+    
+    # song that are closest to cluster centers of k-means clustering 
     closest, _ = pairwise_distances_argmin_min(km.cluster_centers_, df.iloc[:,0:10])
     center = df.iloc[closest,:]
     return (df, center)
@@ -62,3 +71,12 @@ def sil_elb(dataframe):
         sc.append(score)
         sse.append(km.inertia_)
     return (sse,sc)
+
+def error(column, dataframe):
+    total = 0
+    for j in range(0,50):
+        sum = 0
+        for i in range(0,10):
+            sum += pow(dataframe[dataframe[column] == j].iloc[:,i] - dataframe[dataframe[column] == j].mean()[i], 2).sum()
+        total += sum
+    return total

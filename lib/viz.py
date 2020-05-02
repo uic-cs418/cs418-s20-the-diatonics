@@ -1,6 +1,9 @@
 from sklearn.tree import DecisionTreeClassifier
 import seaborn as sns
 from matplotlib import pyplot as plt
+from sklearn.manifold import TSNE
+import pandas as pd
+
 
 def spotify_property_dist_graph(data):
     plot = sns.boxplot(
@@ -14,6 +17,7 @@ def spotify_property_dist_graph(data):
         plot.get_xticklabels(),
         rotation=75
     )
+    plt.show()
 
 def get_release_year_distribution_graph(raw_song_data):
     eda_data = raw_song_data.copy()
@@ -23,6 +27,31 @@ def get_release_year_distribution_graph(raw_song_data):
     sns.violinplot(
         data=eda_data,
         x='Release Year'
+    )
+    
+    
+def plot_TSNE(tracks_with_audio_features):
+    tsnedf = tracks_with_audio_features.copy().drop(columns=['artist', 'title', 'cluster'])
+    model = TSNE(n_components=2, random_state=0, perplexity=50, learning_rate=900)
+    tsne_object = model.fit_transform(tsnedf)
+    tsne_df = pd.DataFrame(data=tsne_object, columns=('TSNE Dimension 1', 'TSNE Dimension 2'))
+    tsne_df['cluster'] = tracks_with_audio_features.cluster
+    sns.FacetGrid(tsne_df, hue='cluster', height=5).map(plt.scatter, 'TSNE Dimension 1', 'TSNE Dimension 2', 'cluster')
+    plt.show()
+    
+    
+def compare_center_features(center):
+    center2 = center.copy()
+    plot = sns.boxplot(
+    data=center2.drop(columns=['tempo', 'loudness', 'key', 'cluster'])
+    )
+    plot.set(
+        xlabel='Spotify Track Property', 
+        ylabel='Scaled Value'
+    )
+    plot.set_xticklabels(
+        plot.get_xticklabels(),
+        rotation=75
     )
     
 def compare_centers(centersDF):

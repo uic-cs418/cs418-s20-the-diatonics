@@ -4,10 +4,11 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import silhouette_score
 import spotify
 
-def scale_columns(cols, df, scaler):
+def scale_columns(cols, df):
     '''
     Replaces the data in the given columns with its scaled equivalent
     '''
+    scaler = MinMaxScaler()
     for col in cols:
         scaler.fit(df[[col]])
         df[[col]] = scaler.transform(df[[col]])

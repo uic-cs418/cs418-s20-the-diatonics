@@ -1,3 +1,4 @@
+from sklearn.tree import DecisionTreeClassifier
 import seaborn as sns
 from matplotlib import pyplot as plt
 
@@ -36,3 +37,11 @@ def compare_centers(centersDF):
         ax = plt.subplot(10,5,i+1)
         ax.set_title(artistSeries.iloc[i] + " - " + songSeries.iloc[i] )
         ax.bar(toPlot.columns.values,toPlot.iloc[i])
+        
+def tree_viz(clusteredDF):
+    features = clusteredDF.copy().drop(columns=['artist', 'title', 'cluster']).columns.values
+    x = clusteredDF[features]
+    y = clusteredDF['cluster']
+    tree = DecisionTreeClassifier(min_samples_split=100)
+    dt = tree.fit(x,y)
+    return dt

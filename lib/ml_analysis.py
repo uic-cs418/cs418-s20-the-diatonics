@@ -1,8 +1,8 @@
 from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
-import spotify
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import silhouette_score
+import spotify
 
 def scale_columns(cols, df, scaler):
     '''

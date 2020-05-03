@@ -11,7 +11,8 @@ def spotify_property_dist_graph(data):
     )
     plot.set(
         xlabel='Spotify Track Property', 
-        ylabel='Scaled Value'
+        ylabel='Scaled Value',
+        title='Distribution of Spotify Track Property Values'
     )
     plot.set_xticklabels(
         plot.get_xticklabels(),
@@ -24,12 +25,12 @@ def get_release_year_distribution_graph(raw_song_data):
     eda_data = eda_data.loc[:, ['Release Year']]\
                     .dropna()\
                     .loc[eda_data['Release Year'] > 1500.0]
-    sns.violinplot(
+    plot = sns.violinplot(
         data=eda_data,
         x='Release Year'
     )
-    
-    
+    plot.set(title='Distribution of Track Release Year')
+
 def plot_TSNE(tracks_with_audio_features):
     tsnedf = tracks_with_audio_features.copy().drop(columns=['artist', 'title', 'cluster'])
     model = TSNE(n_components=2, random_state=0, perplexity=50, learning_rate=900)
@@ -38,8 +39,7 @@ def plot_TSNE(tracks_with_audio_features):
     tsne_df['cluster'] = tracks_with_audio_features.cluster
     sns.FacetGrid(tsne_df, hue='cluster', height=5).map(plt.scatter, 'TSNE Dimension 1', 'TSNE Dimension 2', 'cluster')
     plt.show()
-    
-    
+
 def compare_center_features(center):
     center2 = center.copy()
     plot = sns.boxplot(
@@ -53,7 +53,7 @@ def compare_center_features(center):
         plot.get_xticklabels(),
         rotation=75
     )
-    
+
 def compare_centers(centersDF):
     centersDF = centersDF.sort_values(by=['liveness'])
     toPlot = centersDF.copy()
@@ -66,7 +66,7 @@ def compare_centers(centersDF):
         ax = plt.subplot(10,5,i+1)
         ax.set_title(artistSeries.iloc[i] + " - " + songSeries.iloc[i] )
         ax.bar(toPlot.columns.values,toPlot.iloc[i])
-        
+
 def tree_viz(clusteredDF):
     features = clusteredDF.copy().drop(columns=['artist', 'title', 'cluster']).columns.values
     x = clusteredDF[features]

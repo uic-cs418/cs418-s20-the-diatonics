@@ -33,10 +33,10 @@ def recommend(title,artist,dataframe,sp,tracks_to_query):
     for i in range(0,50):
         sse = 0
         for j in range(0,10):
-            sse += pow(df.iloc[0,j]-dataframe[dataframe.cluster == i].drop(columns=['cluster']).mean()[j],2)
+            sse += pow(df.iloc[0,j] - dataframe[dataframe.cluster_km == i].drop(columns=['cluster_km', 'cluster_ag']).mean()[j],2)
         dis.append(sse)
     clst = dis.index(min(dis))
-    return dataframe[dataframe.cluster == clst][['artist', 'title']]
+    return dataframe[dataframe.cluster_km == clst][['artist', 'title']]
 
 
 def cluster_songs(df, num_clusters = 50):

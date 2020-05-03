@@ -51,12 +51,17 @@ def get_audio_features(tracks_to_query, sp):
     '''
     urls = [track[2] for track in tracks_to_query]
     audio_features_dict = sp.audio_features(tracks=urls)
-
-    df = pd.DataFrame.from_dict(audio_features_dict)
+    tracks = []
+    cleaned_features = []
+    for index, item in enumerate(audio_features_dict):
+        if item:
+            tracks.append(tracks_to_query[index])
+            cleaned_features.append(audio_features_dict[index])
+    df = pd.DataFrame.from_dict(cleaned_features)
     df = df.drop(columns=['time_signature', 'duration_ms', 'mode', 'type', 'id', 'uri','track_href','analysis_url'])
 
-    track_names = [track[0] for track in tracks_to_query]
-    artist_names = [track[1] for track in tracks_to_query]
+    track_names = [track[0] for track in tracks]
+    artist_names = [track[1] for track in tracks]
     df['title'] = track_names
     df['artist'] = artist_names
 
@@ -84,4 +89,3 @@ def audio_features(tracks_to_query, sp):
     dataframe.reset_index(inplace = True)
     dataframe.drop(columns=['index'], inplace=True)
     return dataframe
-

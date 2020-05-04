@@ -52,7 +52,8 @@ def compare_center_features(center):
     )
     plot.set(
         xlabel='Spotify Track Property', 
-        ylabel='Scaled Value'
+        ylabel='Scaled Value',
+        title = 'Distribution of Spotify Track Properties of Representative Songs'
     )
     plot.set_xticklabels(
         plot.get_xticklabels(),

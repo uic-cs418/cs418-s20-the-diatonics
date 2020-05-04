@@ -31,19 +31,24 @@ def get_release_year_distribution_graph(raw_song_data):
     )
     plot.set(title='Distribution of Track Release Year')
 
-def plot_TSNE(tracks_with_audio_features):
-    tsnedf = tracks_with_audio_features.copy().drop(columns=['artist', 'title', 'cluster'])
+def plot_TSNE(tracks_with_audio_features,cluster_type):
+    tsnedf = tracks_with_audio_features.copy().drop(columns=['artist', 'title', 'cluster_km','cluster_ag'])
     model = TSNE(n_components=2, random_state=0, perplexity=50, learning_rate=900)
     tsne_object = model.fit_transform(tsnedf)
     tsne_df = pd.DataFrame(data=tsne_object, columns=('TSNE Dimension 1', 'TSNE Dimension 2'))
-    tsne_df['cluster'] = tracks_with_audio_features.cluster
-    sns.FacetGrid(tsne_df, hue='cluster', height=5).map(plt.scatter, 'TSNE Dimension 1', 'TSNE Dimension 2', 'cluster')
+    if cluster_type == 'KM':
+        tsne_df['cluster_km'] = tracks_with_audio_features.cluster_km
+        sns.FacetGrid(tsne_df, hue='cluster_km', height=5).map(plt.scatter, 'TSNE Dimension 1', 'TSNE Dimension 2', 'cluster_km')
+    elif cluster_type == 'AG':
+        tsne_df['cluster_ag'] = tracks_with_audio_features.cluster_ag
+        sns.FacetGrid(tsne_df, hue='cluster_ag', height=5).map(plt.scatter, 'TSNE Dimension 1', 'TSNE Dimension 2', 'cluster_ag')
+    
     plt.show()
 
 def compare_center_features(center):
     center2 = center.copy()
     plot = sns.boxplot(
-    data=center2.drop(columns=['tempo', 'loudness', 'key', 'cluster'])
+    data=center2.drop(columns=['tempo', 'loudness', 'key', 'cluster_km','cluster_ag'])
     )
     plot.set(
         xlabel='Spotify Track Property', 
